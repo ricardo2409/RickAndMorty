@@ -7,9 +7,14 @@
 
 import UIKit
 
+protocol RMCharacterListViewDelegate: AnyObject {
+    func rmCharacterListView(_ characterListView: CharacterListView, didSelectCharacter character: RMCharacter)
+}
+
 /// Shows list of characters, loader, etc
 final class CharacterListView: UIView {
 
+    public weak var delegate : RMCharacterListViewDelegate?
     private let viewModel = CharacterListViewViewModel()
     
     private let spinner: UIActivityIndicatorView = {
@@ -22,12 +27,13 @@ final class CharacterListView: UIView {
     private let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 10)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.isHidden = true
         collectionView.alpha = 0
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.register(RMCharacterCollectionViewCell.self, forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier)
+        collectionView.register(RMFooterLoadingCollectionReusableView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier)
         return collectionView
     }()
     //MARK: - init
@@ -72,6 +78,10 @@ final class CharacterListView: UIView {
 }
 
 extension CharacterListView: CharacterListViewViewModelDelegate {
+    func didSelectCharacter(_ character: RMCharacter) {
+        delegate?.rmCharacterListView(self, didSelectCharacter: character)
+    }
+    
     func didLoadInitialCharacters() {
         spinner.stopAnimating()
         collectionView.isHidden = false
