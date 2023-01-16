@@ -61,7 +61,7 @@ final class CharacterListViewViewModel: NSObject {
             return
         }
         isLoadingMoreCharacters = true
-        print("Fetching more characters")
+        //print("Fetching more characters")
 
         guard let request = RMRequest(url: url) else {
             isLoadingMoreCharacters = false
@@ -90,7 +90,7 @@ final class CharacterListViewViewModel: NSObject {
                 DispatchQueue.main.async {
                     strongSelf.delegate?.didLoadMoreCharacters(with: indexPathsToAdd)
                     
-                    //strongSelf.isLoadingMoreCharacters = false
+                    strongSelf.isLoadingMoreCharacters = false
                 }
             case .failure(let failure):
                 print(String(describing: failure))
