@@ -47,6 +47,7 @@ final class RMCharacterCollectionViewCell: UICollectionViewCell {
     }
     
     required init?(coder: NSCoder) {
+        super.init(coder: coder)
         fatalError("Unsopported")
     }
     

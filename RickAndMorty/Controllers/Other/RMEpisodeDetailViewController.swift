@@ -8,13 +8,13 @@
 import UIKit
 
 /// VC to show details about a single episode
-final class RMEpisodeDetailViewController: UIViewController {
+final class RMEpisodeDetailViewController: UIViewController, RMEpisodeDetailViewViewModelDelegate, RMEpisodeDetailViewDelegate {
 
     private let detailView = RMEpisodeDetailView()
     private let viewModel: RMEpisodeDetailViewViewModel
     //MARK: - Init
     init(url: URL?) {
-        self.viewModel = .init(endpointUrl: url)
+        self.viewModel = RMEpisodeDetailViewViewModel(endpointUrl: url)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -27,8 +27,11 @@ final class RMEpisodeDetailViewController: UIViewController {
         super.viewDidLoad()
         view.addSubview(detailView)
         title = "Episode"
+        detailView.delegate = self
         addConstraints()
         navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(didTapShare))
+        viewModel.delegate = self
+        viewModel.fetchEpisodeData()
     }
     
 
@@ -46,4 +49,16 @@ final class RMEpisodeDetailViewController: UIViewController {
         
     }
 
+    // MARK: - ViewDelegate
+    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailView, didSelect character: RMCharacter) {
+        let vc = RMCharacterDetailViewController(viewModel: .init(character: character))
+        vc.title = character.name
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    // MARK: - ViewModelDelegate
+    func didFetchEpisodeDetails() {
+        detailView.configure(with: viewModel)
+    }
 }
