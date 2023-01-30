@@ -20,7 +20,7 @@ final class RMImageLoader {
 
         //if key already in cache dont create request
         if let data = imageDataCache.object(forKey: key) {
-            print("Reading from cache")
+           // print("Reading from cache")
             completion(.success(data as Data))
             return
         }

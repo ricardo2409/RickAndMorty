@@ -1,20 +1,20 @@
 //
-//  RMEpisodeDetailView.swift
+//  RMLocationDetailView.swift
 //  RickAndMorty
 //
-//  Created by Ricardo Trevino on 1/20/23.
+//  Created by Ricardo Trevino on 1/30/23.
 //
 
 import UIKit
 
-protocol RMEpisodeDetailViewDelegate : AnyObject {
-    func rmEpisodeDetailView(_ detailView: RMEpisodeDetailView, didSelect character: RMCharacter)
+protocol RMLocationDetailViewDelegate : AnyObject {
+    func rmEpisodeDetailView(_ detailView: RMLocationDetailView, didSelect character: RMCharacter)
 }
 
-final class RMEpisodeDetailView: UIView {
+final class RMLocationDetailView: UIView {
 
-    public weak var delegate: RMEpisodeDetailViewDelegate?
-    private var viewModel: RMEpisodeDetailViewViewModel? {
+    public weak var delegate: RMLocationDetailViewDelegate?
+    private var viewModel: RMLocationDetailViewViewModel? {
         didSet {
             spinner.stopAnimating()
             self.collectionView?.reloadData()
@@ -83,12 +83,12 @@ final class RMEpisodeDetailView: UIView {
     }
     
     //MARK: - Public
-    public func configure(with viewModel: RMEpisodeDetailViewViewModel){
+    public func configure(with viewModel: RMLocationDetailViewViewModel){
         self.viewModel = viewModel
     }
 }
 
-extension RMEpisodeDetailView: UICollectionViewDelegate, UICollectionViewDataSource {
+extension RMLocationDetailView: UICollectionViewDelegate, UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return viewModel?.cellViewModels.count ?? 0
     }
@@ -127,7 +127,7 @@ extension RMEpisodeDetailView: UICollectionViewDelegate, UICollectionViewDataSou
             return cell
             
         case .characters(let viewModels):
-            // print("Episode Characters")
+           // print("Location Characters")
             let cellViewModel = viewModels[indexPath.row]
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier,
@@ -153,14 +153,14 @@ extension RMEpisodeDetailView: UICollectionViewDelegate, UICollectionViewDataSou
             
         case .characters:
             guard let character = viewModel.character(at: indexPath.row) else {
-                return 
+                return
             }
             delegate?.rmEpisodeDetailView(self, didSelect: character)
         }
     }
 }
 
-extension RMEpisodeDetailView{
+extension RMLocationDetailView{
     func layout(for section: Int) -> NSCollectionLayoutSection {
         guard let sections = viewModel?.cellViewModels else {
             return createInfoLayout()
@@ -205,3 +205,4 @@ extension RMEpisodeDetailView{
         return section
     }
 }
+
